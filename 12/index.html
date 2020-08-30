@@ -6,13 +6,13 @@
 
     <div id="title">
         <!-- TODO: CHANGE TITLE FOR EACH GRAPH -->
-        <h3>How concerned are incoming freshman about paying for college?</h3>
+        <h3>How many hours of sleep do incoming freshmen think they'll get on a weekday?</h3>
     </div>
 
     <div id="graph"></div>
     <div id="caption">
         <!-- TODO: CHANGE NUMBER OF RESPONSES -->
-        <p id="responses">1770 responses</p>
+        <p id="responses">1777 responses</p>
         <div id="credit">
             <p style="color:rgb(124, 124, 124)">Source: TMD Survey</p>
             <!-- TODO: CHANGE TO YOUR NAME :) -->
@@ -21,7 +21,7 @@
     </div>
 
     <script>
-        var margin = {top: 20, right: 20, bottom: 70, left: 20}, //TODO: Might have to change margins around!
+        var margin = {top: 20, right: 20, bottom: 40, left: 20}, //TODO: Might have to change margins around!
             width = window.innerWidth - margin.left - margin.right
             height = 400 - margin.top - margin.bottom;
 
@@ -33,7 +33,7 @@
                     .attr("transform", "translate("+ margin.left + "," +margin.top + ")")
         
         //TODO: change data file!
-        d3.csv("7concernedforpaying.csv", function(data){
+        d3.csv("sleep.csv", function(data){
             function getMax(){
                 return d3.max(data, function(d) {return +d.Percent})
             }
@@ -61,7 +61,7 @@
 
             var x = d3.scaleBand()
                     //TODO: change the domain! Potentailly change lower bound of range
-                    .domain(["Very Unconcerned", "Somewhat Unconcerned", "Somewhat Concerned", "Very Concerned"])
+                    .domain(["4 hours", "5 hours", "6 hours", "7 hours", "8 hours", "9 hours", "10+ hours"])
                     .range([40, width])
                     .padding(0.1)
             
@@ -75,7 +75,6 @@
             function customXAxis(g){
                 g.call(xAxis);
                 g.select(".domain").remove(); 
-                //TODO: change/remove the slant for the axis labels
                 g.selectAll("text")
                     .style("text-anchor", "end")
                     .attr("transform", "rotate(-25)");
@@ -96,19 +95,19 @@
             //CREATE THE ACTUAL BARS
             var color = d3.scaleOrdinal()
                         //TODO: Change the domain. update color scale if necessary
-                        .domain(["Very Unconcerned", "Somewhat Unconcerned", "Somewhat Concerned", "Very Concerned"])
-                        .range(['#374567','#526699','#99528a', '#67375d'])
+                        .domain(["4 hours", "5 hours", "6 hours", "7 hours", "8 hours", "9 hours", "10+ hours"])
+                        .range(["#93c3df","#6daed5","#4b97c9","#2f7ebc","#1864aa","#0a4a90","#08306b"])
 
             svg.selectAll("bar")
                 .data(data)
                 .enter()
                 .append("rect")
-                    .attr("x", function(d){ return x(d.ConcernLevel)}) //TODO: change the x variable
+                    .attr("x", function(d){ return x(d.Sleep)}) //TODO: change the x variable
                     .attr("y", function(d) {return y(d.Percent)}) //TODO: change the y variable
                     .attr("width", x.bandwidth())
                     .attr("height", function(d){return height - y(d.Percent)}) //TODO: change the y variable
                 .attr("fill", function(d){
-                    return color(d.ConcernLevel) //TODO: change the x varaible
+                    return color(d.Sleep) //TODO: change the x varaible
                 })
                 .on("mousemove", tip.show)
                 .on("mouseout", tip.hide)
@@ -163,7 +162,7 @@
     }
 
     .myBar:hover{
-        opacity: 0.85;
+        opacity: 0.80;
     }
 
     #title{
@@ -173,9 +172,6 @@
 
     #caption{
         padding-left: 20px;
-    }
-    #responses{
-        display: inline-block;
     }
     #caption p{
         font-size: 8px;
@@ -195,5 +191,8 @@
         width: 25px;
         height: 25px;
         float: right;
+    }
+    #responses{
+        display: inline-block;
     }
 </style>

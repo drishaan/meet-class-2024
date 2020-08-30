@@ -6,13 +6,13 @@
 
     <div id="title">
         <!-- TODO: CHANGE TITLE FOR EACH GRAPH -->
-        <h3>How concerned are incoming freshman about paying for college?</h3>
+        <h3>How concerned are incoming freshmen about paying for college?</h3>
     </div>
 
     <div id="graph"></div>
     <div id="caption">
         <!-- TODO: CHANGE NUMBER OF RESPONSES -->
-        <p>1770 responses</p>
+        <p id="responses">1770 responses</p>
         <div id="credit">
             <p style="color:rgb(124, 124, 124)">Source: TMD Survey</p>
             <!-- TODO: CHANGE TO YOUR NAME :) -->
@@ -97,7 +97,7 @@
             var color = d3.scaleOrdinal()
                         //TODO: Change the domain. update color scale if necessary
                         .domain(["Very Unconcerned", "Somewhat Unconcerned", "Somewhat Concerned", "Very Concerned"])
-                        .range(['#374567','#526699','#99528a', '#67375d'])
+                        .range(["#15728c","#88a7ca","#d6a4db","#d65e94"])
 
             svg.selectAll("bar")
                 .data(data)
@@ -192,5 +192,8 @@
         width: 25px;
         height: 25px;
         float: right;
+    }
+    #responses{
+        display: inline-block;
     }
 </style>
