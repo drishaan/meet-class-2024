@@ -21,7 +21,7 @@
     </div>
 
     <script>
-        var margin = {top: 20, right: 20, bottom: 70, left: 20}, //TODO: Might have to change margins around!
+        var margin = {top: 20, right: 10, bottom: 70, left: 10}, //TODO: Might have to change margins around!
             width = window.innerWidth - margin.left - margin.right
             height = 400 - margin.top - margin.bottom;
 
@@ -94,7 +94,8 @@
             //CREATE THE ACTUAL BARS
             var color = d3.scaleOrdinal()
                         //TODO: Change the domain. update color scale if necessary
-                        .domain(["Yes, I regularly follow U-M sports and/orthe Big 10 and/or college sports", "es, I am a casual fan and will occasionally follow on big sports occasions (i.e. Rose Bowl, March Madness, etc…)", "No, but I plan on being when I beginschool at U-M (i.e. go to football/basketball/hockey games)", "No, I am not and do not plan on frequently engaging with U-M sports culture"])
+                        .domain(["Yes, I regularly follow U-M sports and/or the Big 10" +
+                                 "and/or college sports", "Yes, I am a casual fan and will occasionally follow on" + "big sports occasions (i.e. Rose Bowl, March Madness, etc…)", "No, but I plan on being when I beginschool at U-M (i.e. go to football/basketball/hockey games)", "No, I am not and do not plan on frequently engaging with U-M sports culture"])
                         .range(['#15728c','#88a7ca','#e2e1ff','#d6a4db','#d65e94'])
 
             svg.selectAll("bar")
