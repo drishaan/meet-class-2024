@@ -1,0 +1,199 @@
+<html>
+    <head>
+        <script src="https://d3js.org/d3.v4.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-tip/0.7.1/d3-tip.min.js"></script>
+    </head>
+
+    <div id="title">
+        <!-- TODO: CHANGE TITLE FOR EACH GRAPH -->
+        <h3>When did you/when do you first plan on drinking alcohol, if ever?</h3>
+    </div>
+
+    <div id="graph"></div>
+    <div id="caption">
+        <!-- TODO: CHANGE NUMBER OF RESPONSES -->
+        <p id="responses">1658 responses</p>
+        <div id="credit">
+            <p style="color:rgb(124, 124, 124)">Source: TMD Survey</p>
+            <!-- TODO: CHANGE TO YOUR NAME :) -->
+            <p>Alex Cotignola</p>
+        </div>
+    </div>
+
+    <script>
+        var margin = {top: 20, right: 20, bottom: 70, left: 20}, //TODO: Might have to change margins around!
+            width = window.innerWidth - margin.left - margin.right
+            height = 400 - margin.top - margin.bottom;
+
+        var svg = d3.select("#graph")
+                  .append("svg")
+                    .attr("width", width + margin.left + margin.right)
+                    .attr("height", height + margin.top + margin.bottom)
+                  .append("g")
+                    .attr("transform", "translate("+ margin.left + "," +margin.top + ")")
+        
+        //TODO: change data file!
+        d3.csv("data.csv", function(data){
+            function getMax(){
+                return d3.max(data, function(d) {return +d.Percent})
+            }
+            var y = d3.scaleLinear()
+                    .domain([0, Math.ceil(getMax() / 10) * 10])
+                    .range([height, 0])
+            
+            var yAxis = d3.axisRight(y)
+                .tickSize(width)
+                .tickFormat(function(d) {
+                    return "\xa0" + d + "%"
+                })
+            
+            var yGroup = svg.append("g")
+                .call(customYAxis)
+
+            function customYAxis(g) {
+                var s = g.selection ? g.selection() : g;
+                g.call(yAxis);
+                s.select(".domain").remove();
+                s.selectAll(".tick line").filter(Number).attr("stroke", "#c0c0c0").attr("stroke-dasharray", "2,2");
+                s.selectAll(".tick text").attr("x", 4).attr("dy", -4);
+                if (s !== g) g.selectAll(".tick text").attrTween("x", null).attrTween("dy", null);
+            }
+
+            var x = d3.scaleBand()
+                    //TODO: change the domain! Potentailly change lower bound of range
+                    .domain(["Before high school", "9-10th Grade", "11-12th Grade", "College","21+","Never"])
+                    .range([40, width])
+                    .padding(0.1)
+            
+            var xAxis = d3.axisBottom(x)
+
+            var xGroup = svg.append("g")
+                         .attr("transform", "translate(0," + height + ")")
+                         .attr('class', "axis")
+                         .call(customXAxis)
+
+            function customXAxis(g){
+                g.call(xAxis);
+                g.select(".domain").remove(); 
+                //TODO: change/remove the slant for the axis labels
+                g.selectAll("text")
+                    .style("text-anchor", "end")
+                    .attr("transform", "rotate(-25)");
+            }
+
+            //Create Tooltip
+            var tip = d3.tip()
+                .attr('class', 'd3-tip')
+                .offset([-10, 0])
+                .html(function(d) {
+                    //TODO: change what you want inside the tooltip!
+                    return parseFloat(d.Percent).toFixed(2) + "%";
+                });
+            
+            svg.call(tip);
+
+
+            //CREATE THE ACTUAL BARS
+            var color = d3.scaleOrdinal()
+                        //TODO: Change the domain. update color scale if necessary
+                        .domain(["Before high school","9-10th Grade","11-12th Grade","College","21+","Never"])
+                        .range(["#4c7c9b","#86b0cc","#c1e7ff","#d6a4db","#d65e94","#eae3e7"])
+
+            svg.selectAll("bar")
+                .data(data)
+                .enter()
+                .append("rect")
+                    .attr("x", function(d){ return x(d.Year)}) //TODO: change the x variable
+                    .attr("y", function(d) {return y(d.Percent)}) //TODO: change the y variable
+                    .attr("width", x.bandwidth())
+                    .attr("height", function(d){return height - y(d.Percent)}) //TODO: change the y variable
+                .attr("fill", function(d){
+                    return color(d.Year) //TODO: change the x varaible
+                })
+                .on("mousemove", tip.show)
+                .on("mouseout", tip.hide)
+                .attr("class", "myBar")
+        })
+    </script>
+</html>
+
+<style>
+    html{
+        font-family: sans-serif;
+    }
+
+    .toolTip {
+        position: absolute;
+        display: none;
+        height: auto;
+        background: none repeat scroll 0 0 #ffffff;
+        padding: 6px;
+        text-align: center;
+        font-size: 10px;
+    }
+
+    .d3-tip {
+        line-height: 1;
+        padding: 12px;
+        background: rgba(0, 0, 0, 0.8);
+        color: #fff;
+        border-radius: 2px;
+        text-align: center;
+        font-size: 12px;
+    }
+
+    /* Creates a small triangle extender for the tooltip */
+    .d3-tip:after {
+        box-sizing: border-box;
+        display: inline;
+        font-size: 10px;
+        width: 100%;
+        line-height: 1;
+        color: rgba(0, 0, 0, 0.8);
+        content: "\25BC";
+        position: absolute;
+        text-align: center;
+    }
+
+    /* Style northward tooltips differently */
+    .d3-tip.n:after {
+        margin: -1px 0 0 0;
+        top: 100%;
+        left: 0;
+    }
+
+    .myBar:hover{
+        opacity: 0.85;
+    }
+
+    #title{
+        text-align: center;
+        align-content: center;
+    }
+
+    #caption{
+        padding-left: 20px;
+    }
+    #responses{
+        display: inline-block;
+    }
+    #caption p{
+        font-size: 8px;
+        margin: 0px;;
+        padding: 0px;
+        margin-top: 0px;
+    }
+    #caption a{
+        color: rgb(124, 124, 124);
+    }
+    #caption div{
+        float: right;
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+    #caption img{
+        width: 25px;
+        height: 25px;
+        float: right;
+    }
+</style>
