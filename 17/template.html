@@ -6,13 +6,13 @@
 
     <div id="title">
         <!-- TODO: CHANGE TITLE FOR EACH GRAPH -->
-        <h3>How interested are you in Greek Life?</h3>
+        <h3>Are you currently interested in U-M sports culture?</h3>
     </div>
 
     <div id="graph"></div>
     <div id="caption">
         <!-- TODO: CHANGE NUMBER OF RESPONSES -->
-        <p id="responses">1779 responses</p>
+        <p id="responses">1768 responses</p>
         <div id="credit">
             <p style="color:rgb(124, 124, 124)">Source: TMD Survey</p>
             <!-- TODO: CHANGE TO YOUR NAME :) -->
@@ -33,7 +33,7 @@
                     .attr("transform", "translate("+ margin.left + "," +margin.top + ")")
         
         //TODO: change data file!
-        d3.csv("13greeklifeinterest.csv", function(data){
+        d3.csv("17sportsculture.csv", function(data){
             function getMax(){
                 return d3.max(data, function(d) {return +d.Percent})
             }
@@ -61,7 +61,7 @@
 
             var x = d3.scaleBand()
                     //TODO: change the domain! Potentailly change lower bound of range
-                    .domain(["Very interested", "Somewhat interested", "Somewhat uninterested", "Very uninterested"])
+                    .domain(["Yes, I regularly follow U-M sports and/orthe Big 10 and/or college sports", "es, I am a casual fan and will occasionally follow on big sports occasions (i.e. Rose Bowl, March Madness, etc…)", "No, but I plan on being when I beginschool at U-M (i.e. go to football/basketball/hockey games)", "No, I am not and do not plan on frequently engaging with U-M sports culture"])
                     .range([40, width])
                     .padding(0.1)
             
@@ -94,19 +94,19 @@
             //CREATE THE ACTUAL BARS
             var color = d3.scaleOrdinal()
                         //TODO: Change the domain. update color scale if necessary
-                        .domain(["Very interested", "Somewhat interested", "Somewhat uninterested", "Very uninterested"])
+                        .domain(["Yes, I regularly follow U-M sports and/orthe Big 10 and/or college sports", "es, I am a casual fan and will occasionally follow on big sports occasions (i.e. Rose Bowl, March Madness, etc…)", "No, but I plan on being when I beginschool at U-M (i.e. go to football/basketball/hockey games)", "No, I am not and do not plan on frequently engaging with U-M sports culture"])
                         .range(['#15728c','#88a7ca','#e2e1ff','#d6a4db','#d65e94'])
 
             svg.selectAll("bar")
                 .data(data)
                 .enter()
                 .append("rect")
-                    .attr("x", function(d){ return x(d.InterestLevel)}) //TODO: change the x variable
+                    .attr("x", function(d){ return x(d.ConcernLevel)}) //TODO: change the x variable
                     .attr("y", function(d) {return y(d.Percent)}) //TODO: change the y variable
                     .attr("width", x.bandwidth())
                     .attr("height", function(d){return height - y(d.Percent)}) //TODO: change the y variable
                 .attr("fill", function(d){
-                    return color(d.InterestLevel) //TODO: change the x varaible
+                    return color(d.ConcernLevel) //TODO: change the x varaible
                 })
                 .on("mousemove", tip.show)
                 .on("mouseout", tip.hide)
