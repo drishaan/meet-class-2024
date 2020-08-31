@@ -18,7 +18,7 @@
     </div>
 
     <script>
-        var margin = {top: 20, right: 20, bottom: 70, left: 20}, //TODO: Might have to change margins around!
+        var margin = {top: 20, right: 20, bottom: 70, left: 20},
             width = window.innerWidth - margin.left - margin.right
             height = 400 - margin.top - margin.bottom;
 
@@ -56,7 +56,6 @@
             }
 
             var x = d3.scaleBand()
-                    //TODO: change the domain! Potentailly change lower bound of range
                     .domain(["Very Likely", "Somewhat Likely", "Somewhat Unlikely", "Very Unlikely"])
                     .range([40, width])
                     .padding(0.1)
@@ -71,7 +70,6 @@
             function customXAxis(g){
                 g.call(xAxis);
                 g.select(".domain").remove(); 
-                //TODO: change/remove the slant for the axis labels
                 g.selectAll("text")
                     .style("text-anchor", "end")
                     .attr("transform", "rotate(-25)");
@@ -82,7 +80,6 @@
                 .attr('class', 'd3-tip')
                 .offset([-10, 0])
                 .html(function(d) {
-                    //TODO: change what you want inside the tooltip!
                     return parseFloat(d.Percent).toFixed(2) + "%";
                 });
             
