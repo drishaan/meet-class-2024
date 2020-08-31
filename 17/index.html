@@ -101,12 +101,12 @@
                 .data(data)
                 .enter()
                 .append("rect")
-                    .attr("x", function(d){ return x(d.ConcernLevel)}) //TODO: change the x variable
+                    .attr("x", function(d){ return x(d.SportsCultureInterestLevel)}) //TODO: change the x variable
                     .attr("y", function(d) {return y(d.Percent)}) //TODO: change the y variable
                     .attr("width", x.bandwidth())
                     .attr("height", function(d){return height - y(d.Percent)}) //TODO: change the y variable
                 .attr("fill", function(d){
-                    return color(d.ConcernLevel) //TODO: change the x varaible
+                    return color(d.SportsCultureInterestLevel) //TODO: change the x varaible
                 })
                 .on("mousemove", tip.show)
                 .on("mouseout", tip.hide)
