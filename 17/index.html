@@ -62,7 +62,7 @@
             var x = d3.scaleBand()
                     //TODO: change the domain! Potentailly change lower bound of range
                     .domain(["Yes, I regularly follow U-M sports and/orthe Big 10 and/or college sports", "es, I am a casual fan and will occasionally follow on big sports occasions (i.e. Rose Bowl, March Madness, etc…)", "No, but I plan on being when I beginschool at U-M (i.e. go to football/basketball/hockey games)", "No, I am not and do not plan on frequently engaging with U-M sports culture"])
-                    .range([40, 80])
+                    .range([40, width])
                     .padding(0.1)
             
             var xAxis = d3.axisBottom(x)
