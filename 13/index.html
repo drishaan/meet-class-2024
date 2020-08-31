@@ -33,7 +33,7 @@
                     .attr("transform", "translate("+ margin.left + "," +margin.top + ")")
         
         //TODO: change data file!
-        d3.csv("13greeklifeinterest.csv", function(data){
+        d3.csv("13greeklifeinterest - Sheet1.csv", function(data){
             function getMax(){
                 return d3.max(data, function(d) {return +d.Percent})
             }
