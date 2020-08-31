@@ -35,7 +35,7 @@
         //TODO: change data file!
         d3.csv("14michiganwinters.csv", function(data){
             function getMax(){
-                return d3.max(data, function(d) {return +d.Percent})
+                return d3.max(data, function(d) {return +d.Percentage})
             }
             var y = d3.scaleLinear()
                     .domain([0, Math.ceil(getMax() / 10) * 10])
@@ -85,7 +85,7 @@
                 .offset([-10, 0])
                 .html(function(d) {
                     //TODO: change what you want inside the tooltip!
-                    return parseFloat(d.Percent).toFixed(2) + "%";
+                    return parseFloat(d.Percentage).toFixed(2) + "%";
                 });
             
             svg.call(tip);
@@ -102,9 +102,9 @@
                 .enter()
                 .append("rect")
                     .attr("x", function(d){ return x(d.PreparednessLevel)}) //TODO: change the x variable
-                    .attr("y", function(d) {return y(d.Percent)}) //TODO: change the y variable
+                    .attr("y", function(d) {return y(d.Percentage)}) //TODO: change the y variable
                     .attr("width", x.bandwidth())
-                    .attr("height", function(d){return height - y(d.Percent)}) //TODO: change the y variable
+                    .attr("height", function(d){return height - y(d.Percentage)}) //TODO: change the y variable
                 .attr("fill", function(d){
                     return color(d.PreparednessLevel) //TODO: change the x varaible
                 })
