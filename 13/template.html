@@ -6,17 +6,17 @@
 
     <div id="title">
         <!-- TODO: CHANGE TITLE FOR EACH GRAPH -->
-        <h3>How concerned are incoming freshman about paying for college?</h3>
+        <h3>How interested are you in Greek Life?</h3>
     </div>
 
     <div id="graph"></div>
     <div id="caption">
         <!-- TODO: CHANGE NUMBER OF RESPONSES -->
-        <p id="responses">1770 responses</p>
+        <p id="responses">1779 responses</p>
         <div id="credit">
             <p style="color:rgb(124, 124, 124)">Source: TMD Survey</p>
             <!-- TODO: CHANGE TO YOUR NAME :) -->
-            <p>Parth Dhyani</p>
+            <p>Ritika Shetty</p>
         </div>
     </div>
 
@@ -33,7 +33,7 @@
                     .attr("transform", "translate("+ margin.left + "," +margin.top + ")")
         
         //TODO: change data file!
-        d3.csv("7concernedforpaying.csv", function(data){
+        d3.csv("13greeklifeinterest.csv", function(data){
             function getMax(){
                 return d3.max(data, function(d) {return +d.Percent})
             }
@@ -61,7 +61,7 @@
 
             var x = d3.scaleBand()
                     //TODO: change the domain! Potentailly change lower bound of range
-                    .domain(["Very Unconcerned", "Somewhat Unconcerned", "Somewhat Concerned", "Very Concerned"])
+                    .domain(["Very interested", "Somewhat interested", "Somewhat uninterested", "Very uninterested"])
                     .range([40, width])
                     .padding(0.1)
             
@@ -76,9 +76,7 @@
                 g.call(xAxis);
                 g.select(".domain").remove(); 
                 //TODO: change/remove the slant for the axis labels
-                g.selectAll("text")
-                    .style("text-anchor", "end")
-                    .attr("transform", "rotate(-25)");
+                
             }
 
             //Create Tooltip
@@ -96,19 +94,19 @@
             //CREATE THE ACTUAL BARS
             var color = d3.scaleOrdinal()
                         //TODO: Change the domain. update color scale if necessary
-                        .domain(["Very Unconcerned", "Somewhat Unconcerned", "Somewhat Concerned", "Very Concerned"])
-                        .range(['#374567','#526699','#99528a', '#67375d'])
+                        .domain(["Very interested", "Somewhat interested", "Somewhat uninterested", "Very uninterested"])
+                        .range(['#15728c','#88a7ca','#e2e1ff','#d6a4db','#d65e94'])
 
             svg.selectAll("bar")
                 .data(data)
                 .enter()
                 .append("rect")
-                    .attr("x", function(d){ return x(d.ConcernLevel)}) //TODO: change the x variable
+                    .attr("x", function(d){ return x(d.InterestLevel)}) //TODO: change the x variable
                     .attr("y", function(d) {return y(d.Percent)}) //TODO: change the y variable
                     .attr("width", x.bandwidth())
                     .attr("height", function(d){return height - y(d.Percent)}) //TODO: change the y variable
                 .attr("fill", function(d){
-                    return color(d.ConcernLevel) //TODO: change the x varaible
+                    return color(d.InterestLevel) //TODO: change the x varaible
                 })
                 .on("mousemove", tip.show)
                 .on("mouseout", tip.hide)
