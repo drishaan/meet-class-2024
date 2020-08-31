@@ -76,7 +76,9 @@
                 g.call(xAxis);
                 g.select(".domain").remove(); 
                 //TODO: change/remove the slant for the axis labels
-                
+                g.selectAll("text")
+                .style("text-anchor","end")
+                .attr("transform","rotate(-25)");
             }
 
             //Create Tooltip
