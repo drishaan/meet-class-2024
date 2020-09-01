@@ -18,7 +18,7 @@
     </div>
 
     <script>
-        var margin = {top: 20, right: 20, bottom: 70, left: 20}, //TODO: Might have to change margins around!
+        var margin = {top: 20, right: 20, bottom: 90, left: 20}, //TODO: Might have to change margins around!
             width = window.innerWidth - margin.left - margin.right
             height = 400 - margin.top - margin.bottom;
 
@@ -29,7 +29,6 @@
                   .append("g")
                     .attr("transform", "translate("+ margin.left + "," +margin.top + ")")
         
-        //TODO: change data file!
         d3.csv("9aid.csv", function(data){
             function getMax(){
                 return d3.max(data, function(d) {return +d.Percent})
@@ -57,7 +56,7 @@
             }
 
             var x = d3.scaleBand()
-                    .domain(["Loans (Stafford or Private)", "Grant (Pell Grants, University grants, etc)", "Scholarship", "No aid"])
+                    .domain(["Loans (Stafford or Private)", "Grant (Pell Grants/University grants/etc)", "Scholarship", "No aid"])
                     .range([40, width])
                     .padding(0.1)
             
@@ -90,7 +89,7 @@
 
             //CREATE THE ACTUAL BARS
             var color = d3.scaleOrdinal()
-                        .domain(["Loans (Stafford or Private)", "Grant (Pell Grants, University grants, etc)", "Scholarship", "No aid"])
+                        .domain(["Loans (Stafford or Private)", "Grant (Pell Grants/University grants/etc)", "Scholarship", "No aid"])
                         .range(['#4c7c9b','#86b0cc','#c1e7ff', '#eae3e7'])
 
             svg.selectAll("bar")
