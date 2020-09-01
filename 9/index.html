@@ -18,7 +18,7 @@
     </div>
 
     <script>
-        var margin = {top: 20, right: 20, bottom: 90, left: 20}, //TODO: Might have to change margins around!
+        var margin = {top: 20, right: 20, bottom: 90, left: 20},
             width = window.innerWidth - margin.left - margin.right
             height = 400 - margin.top - margin.bottom;
 
@@ -69,8 +69,7 @@
 
             function customXAxis(g){
                 g.call(xAxis);
-                g.select(".domain").remove(); 
-                //TODO: change/remove the slant for the axis labels
+                g.select(".domain").remove();
                 g.selectAll("text")
                     .style("text-anchor", "end")
                     .attr("transform", "rotate(-25)");
