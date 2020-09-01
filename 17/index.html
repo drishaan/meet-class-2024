@@ -33,7 +33,7 @@
                     .attr("transform", "translate("+ margin.left + "," +margin.top + ")")
         
         //TODO: change data file!
-        d3.csv("17sportsculture.csv", function(data){
+        d3.csv("17sportsculture - Sheet1.csv", function(data){
             function getMax(){
                 return d3.max(data, function(d) {return +d.Percent})
             }
@@ -61,7 +61,7 @@
 
             var x = d3.scaleBand()
                     //TODO: change the domain! Potentailly change lower bound of range
-                    .domain(["Yes, I regularly follow U-M sports and/orthe Big 10 and/or college sports", "es, I am a casual fan and will occasionally follow on big sports occasions (i.e. Rose Bowl, March Madness, etc…)", "No, but I plan on being when I beginschool at U-M (i.e. go to football/basketball/hockey games)", "No, I am not and do not plan on frequently engaging with U-M sports culture"])
+                    .domain(["Yes, I regularly follow U-M/Big 10/college sports", "Yes, I will occasionally follow on big sports occasions", "No, but I plan on being when I begin school at U-M", "No, I do not plan on frequently engaging with U-M sports culture"])
                     .range([40, width])
                     .padding(0.1)
             
