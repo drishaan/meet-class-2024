@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+        College
+    </title>
+</head>
+
+ <!-- jquery -->
+ <script crossorigin="anonymous" src="https://code.jquery.com/jquery-3.3.1.min.js">
+ </script>
+ <!-- popper -->
+ <script crossorigin="anonymous" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js">
+ </script>
+ <!-- bootstrap -->
+ <link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" rel="stylesheet"/>
+ <script crossorigin="anonymous" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js">
+ </script>
+
+<script src="https://d3js.org/d3.v4.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3-tip/0.7.1/d3-tip.min.js"></script>
+
+<div id="title">
+    <br>
+    <h3>What other colleges did incoming freshman apply to?</h3>
+</div>
+
+<div style="text-align: center; margin-bottom: 20px;">
+    <div class="btn-group btn-group-toggle" data-toggle="buttons">
+     <label class="btn btn-outline-secondary btn-sm active">
+      <input autocomplete="off" id="daily" name="options" type="radio"/>
+      Applied
+     </label>
+     <label class="btn btn-outline-secondary btn-sm" id="greekLife">
+      <input autocomplete="off" id="cumulative" name="options" type="radio"/>
+        Acceptance Rate
+     </label>
+    </div>
+   </div>
+
+<div id="graph"></div>
+<div id="caption">
+    <!-- TODO: CHANGE NUMBER OF RESPONSES -->
+    <p id="responses">1759 responses; Note: Ivy League + define as Ivy League, Stanford, MIT</p>
+    <div id="credit">
+        <p style="color:rgb(124, 124, 124)">Source: TMD Survey</p>
+        <!-- TODO: CHANGE TO YOUR NAME :) -->
+        <p>Parth Dhyani</p>
+    </div>
+</div>
+
+<script>
+    let mode = false; //true if not greek
+
+    //Set size of graph
+    var margin = {top: 20, right: 10, bottom: 70, left: 10},
+        width = window.innerWidth - margin.left - margin.right,
+        height = 400 - margin.top - margin.bottom;
+
+    //Create the svg object
+    var svg = d3.select("#graph")
+        .append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+            .attr("transform",
+                "translate(" + margin.left + "," + margin.top + ")");
+
+    //Function to change string to date object, and then one to do the opposite
+    var parseTime = d3.timeParse("%Y");
+    var formatTime = d3.timeFormat("%Y");
+
+    // Read the data from CSV
+    d3.csv("data.csv", function(data) {
+
+          // List of subgroups = header of the csv files = soil condition here
+  var subgroups = data.columns.slice(1)
+
+// List of groups = species here = value of the first column called group -> I show them on the X axis
+var groups = d3.map(data, function(d){return(d.Comfort)}).keys()
+
+    
+    var y = d3.scaleLinear()
+        .domain([0, 60])
+        .range([height, 0]);
+
+    var yAxis = d3.axisRight(y)
+        .tickSize(width)
+        .tickFormat(function(d) {
+        return this.parentNode.nextSibling
+            ? "\xa0" + d + "%"    //if not top element, format tick with %
+            : d + "%"; //if top, add percent enrolled
+        });
+
+    var yGroup = svg.append("g")
+        .call(customYAxis);
+
+    function customYAxis(g) {
+        var s = g.selection ? g.selection() : g;
+        g.call(yAxis);
+        s.select(".domain").remove();
+        s.selectAll(".tick line").filter(Number).attr("stroke", "#c0c0c0").attr("stroke-dasharray", "2,2"); //add dashed horizontal lines
+        s.selectAll(".tick text").attr("x", 4).attr("dy", -4);
+        if (s !== g) g.selectAll(".tick text").attrTween("x", null).attrTween("dy", null);
+    }
+
+    var x = d3.scaleBand()
+        .domain(["Other Michigan Schools", "Other Big 10 Schools", "Ivy League +", "University of California"])
+        .range([40, width])
+        .padding(0.1);
+
+        var xAxis = d3.axisBottom(x)
+
+        var xGroup = svg.append("g")
+        .attr("transform", "translate(0," + height + ")") //move x-axis to bottom of graph
+        .attr('class', 'axis')
+        .call(customXAxis);
+
+        function customXAxis(g) {
+        g.call(xAxis);
+        g.select(".domain").remove(); //remove bracket ticks
+        g.selectAll("text")
+            .style("text-anchor", "end")
+            .attr("transform", "rotate(-25)");
+    }
+
+    var tipApplied= d3.tip()
+                .attr('class', 'd3-tip')
+                .offset([-10, 0])
+                .html(function(d) {
+                    //TODO: change what you want inside the tooltip!
+                    return parseFloat(d.Applied).toFixed(2) + "%";
+                });
+            
+    svg.call(tipApplied);
+
+    var tipAccepted = d3.tip()
+                .attr('class', 'd3-tip')
+                .offset([-10, 0])
+                .html(function(d) {
+                    return parseFloat(d.Accepted).toFixed(2) + "%";
+                });
+            
+    svg.call(tipAccepted);
+
+    var color = d3.scaleOrdinal()
+        .domain(["Other Michigan Schools", "Other Big 10 Schools", "Ivy League+ Schools", "University of California"])
+        .range(['#374567','#526699','#99528a', '#67375d'])
+    
+    console.log(data)
+    svg.selectAll("mybar")
+    .data(data)
+    .enter()
+    .append("rect")
+        .attr("x", function(d) { return x(d.School); })
+        .attr("y", function(d) { return y(d.Applied) })
+        .attr("width", x.bandwidth())
+        .attr("height", function(d) { return height - y(d.Applied)})
+        .attr("fill", "#374567")
+        .attr("class","applied mybar")
+        .on("mousemove", tipApplied.show)
+        .on("mouseout", tipApplied.hide)
+
+    svg.selectAll("mybar")
+    .data(data)
+    .enter()
+    .append("rect")
+        .attr("x", function(d) { return x(d.School); })
+        .attr("y", function(d) { return y(0) })
+        .attr("width", x.bandwidth())
+        .attr("height", function(d) { return height - y(0)})
+        .attr("fill", "#188c8a")
+        .attr("class","accepted mybar")
+        .on("mousemove", tipAccepted.show)
+        .on("mouseout", tipAccepted.hide)
+
+        
+    function update(){
+        
+        y.domain([0, mode ? 100 : 60]);
+        yGroup.transition().duration(500).call(customYAxis)
+
+        var u = svg.selectAll(".accepted")
+        .data(data)
+
+        u
+        .enter()
+        .append("rect")
+        .merge(u)
+        .transition()
+        .duration(mode ? 700 : 250)
+        .attr("y", function(d) { return mode ? y(d.Accepted): y(0)})
+        .attr("height", function(d) { return mode ? height - y(d.Accepted) : height - y(0)})
+
+        u = svg.selectAll(".applied")
+        .data(data)
+
+        u
+        .enter()
+        .append("rect")
+        .merge(u)
+        .transition()
+        .duration(mode ? 250 : 700)
+        .attr("y", function(d) { return mode ? y(0) : y(d.Applied)})
+        .attr("height", function(d) { return mode ? height - y(0) : height - y(d.Applied)})
+    }
+
+
+    d3.selectAll('.btn')
+        .on('click', handleTypeChange)
+
+    function handleTypeChange() {
+        let type = this.children.options.id
+        if(mode != (type == "cumulative")){
+            mode = (type == "cumulative");
+            update();
+        }
+    }
+
+})
+
+</script>
+
+<style>
+    html *{
+        font-family: sans-serif !important;
+        background-color: white;
+    }
+    html, body {
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+    #caption{
+        padding-left: 20px;
+    }
+    #caption p{
+        font-size: 8px;
+        margin: 0px;;
+        padding: 0px;
+        margin-top: 0px;
+    }
+    #caption a{
+        color: rgb(124, 124, 124);
+    }
+    #caption div{
+        float: right;
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+    #responses{
+        display: inline-block;
+    }
+    h2{
+        margin-bottom: 0px;
+        padding-bottom: 0px;
+    }
+    h3{
+        margin-top: 5px;
+        padding-top: 0px;
+        margin-left: 5px;
+        margin-right: 5px;
+        font-size: 1.17em;
+        font-weight: bolder;
+    }
+    #title{
+        text-align: center;
+        align-content: center;
+    }
+    .toolTip {
+        position: absolute;
+        display: none;
+        height: auto;
+        background: none repeat scroll 0 0 #ffffff;
+        padding: 6px;
+        text-align: center;
+        font-size: 10px;
+    }
+
+    .d3-tip {
+        line-height: 1;
+        padding: 12px;
+        background: rgba(0, 0, 0, 0.8);
+        color: #fff;
+        border-radius: 2px;
+        text-align: center;
+        font-size: 12px;
+    }
+
+    /* Creates a small triangle extender for the tooltip */
+    .d3-tip:after {
+        box-sizing: border-box;
+        display: inline;
+        font-size: 10px;
+        width: 100%;
+        line-height: 1;
+        color: rgba(0, 0, 0, 0.8);
+        content: "\25BC";
+        position: absolute;
+        text-align: center;
+    }
+
+    /* Style northward tooltips differently */
+    .d3-tip.n:after {
+        margin: -1px 0 0 0;
+        top: 100%;
+        left: 0;
+    }
+
+    .mybar:hover{
+        opacity: 0.8;
+    }
+</style>
