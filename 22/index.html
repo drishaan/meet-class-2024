@@ -39,11 +39,13 @@
    </div>
 <div id="graph"></div>
 <div id="caption">
+    <!-- TODO: CHANGE NUMBER OF RESPONSES -->
+    <p id="responses">1775 responses</p>
     <div id="credit">
-        <p>Alex Cotignola</p>
         <p style="color:rgb(124, 124, 124)">Source: TMD Survey</p>
+        <!-- TODO: CHANGE TO YOUR NAME :) -->
+        <p>Alex Cotignola</p>
     </div>
-    <img src="logo.jpg" alt="The Michigan Daily">
 </div>
 
 <script>
@@ -89,7 +91,7 @@ var groups = d3.map(data, function(d){return(d.Politics)}).keys()
     }
     
     var y = d3.scaleLinear()
-        .domain([0, Math.ceil(getMax() / 10) * 10 + 10])
+        .domain([0, 40])
         .range([height, 0]);
 
     var yAxis = d3.axisRight(y)
@@ -196,8 +198,8 @@ var groups = d3.map(data, function(d){return(d.Politics)}).keys()
         
     function update(){
 
-        y.domain([0,90]);
-        yGroup.transition().duration(2500).call(customYAxis);
+        y.domain([0, mode ? 90 : 40]);
+        yGroup.transition().duration(300).call(customYAxis);
 
         svg.selectAll(".legend").transition().duration(mode ? 400 : 0).style("opacity", mode ? 1 : 0)
 

@@ -56,7 +56,7 @@
             }
 
             var x = d3.scaleBand()
-                    .domain(["Yes", "No - would at home", "No - not religious", "No - didn’t at home"])
+                    .domain(["Yes", "No - would at home", "No - not religious", "No - didn't at home"])
                     .range([40, width])
                     .padding(0.1)
             
@@ -88,7 +88,7 @@
 
             //CREATE THE ACTUAL BARS
             var color = d3.scaleOrdinal()
-                        .domain(["Yes", "No - would at home", "No - not religious", "No - didn’t at home"])
+                        .domain(["Yes", "No - would at home", "No - not religious", "No - didn't at home"])
                         .range(['#4ddba5', '#9281db', '#beaeed', '#e7ddff'])
 
             svg.selectAll("bar")
@@ -112,6 +112,10 @@
 <style>
     html{
         font-family: sans-serif;
+    }
+
+    body{
+        margin: 0;
     }
 
     .toolTip {

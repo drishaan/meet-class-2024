@@ -6,13 +6,13 @@
 
     <div id="title">
         <!-- TODO: CHANGE TITLE FOR EACH GRAPH -->
-        <h3>This semester, I plan to be...</h3>
+        <h3>What do you think your first semester GPA will be?</h3>
     </div>
 
     <div id="graph"></div>
     <div id="caption">
         <!-- TODO: CHANGE NUMBER OF RESPONSES -->
-        <p id="responses">1770 responses</p>
+        <p id="responses">1693 responses</p>
         <div id="credit">
             <p style="color:rgb(124, 124, 124)">Source: TMD Survey</p>
             <!-- TODO: CHANGE TO YOUR NAME :) -->
@@ -61,7 +61,7 @@
 
             var x = d3.scaleBand()
                     //TODO: change the domain! Potentailly change lower bound of range
-                    .domain(["Off Campus, Online", "Off Campus, In-Person", "On Campus, Online", "On Campus, In-Person", "Stay at Home"])
+                    .domain(["2.6 - 2.79", "2.8 - 2.99", "3.0 - 3.19", "3.2 - 3.39","3.4 - 3.59","3.6 - 3.79","3.8 - 4.0"])
                     .range([40, width])
                     .padding(0.1)
             
@@ -77,7 +77,8 @@
                 g.select(".domain").remove(); 
                 //TODO: change/remove the slant for the axis labels
                 g.selectAll("text")
-                    .style("text-anchor", "end");
+                    .style("text-anchor", "end")
+                    .attr("transform", "rotate(-25)");
             }
 
             //Create Tooltip
@@ -95,19 +96,19 @@
             //CREATE THE ACTUAL BARS
             var color = d3.scaleOrdinal()
                         //TODO: Change the domain. update color scale if necessary
-                        .domain(["Off Campus, Online", "Off Campus, In-Person", "On Campus, Online", "On Campus, In-Person", "Stay at Home"])
-                        .range(["#15728c","#88a7ca","#d6a4db","#d65e94","#eae3e7"])
+                        .domain(["2.6 - 2.79", "2.8 - 2.99", "3.0 - 3.19", "3.2 - 3.39","3.4 - 3.59","3.6 - 3.79","3.8 - 4.0"])
+                        .range(["#e3da34","#e7dd4b","#ebe15e","#efe470","#f3e781","#f6eb92","#f9eea2","#fcf2b2","#fef5c2"])
 
             svg.selectAll("bar")
                 .data(data)
                 .enter()
                 .append("rect")
-                    .attr("x", function(d){ return x(d.Status)}) //TODO: change the x variable
+                    .attr("x", function(d){ return x(d.GPA)}) //TODO: change the x variable
                     .attr("y", function(d) {return y(d.Percent)}) //TODO: change the y variable
                     .attr("width", x.bandwidth())
                     .attr("height", function(d){return height - y(d.Percent)}) //TODO: change the y variable
                 .attr("fill", function(d){
-                    return color(d.Status) //TODO: change the x varaible
+                    return color(d.GPA) //TODO: change the x varaible
                 })
                 .on("mousemove", tip.show)
                 .on("mouseout", tip.hide)
@@ -119,6 +120,9 @@
 <style>
     html{
         font-family: sans-serif;
+    }
+    body{
+        margin: 0;
     }
 
     .toolTip {
