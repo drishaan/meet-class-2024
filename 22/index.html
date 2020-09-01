@@ -21,7 +21,7 @@
 
 <div id="title">
     <br>
-    <h3>How likely are incoming freshmen to vote in the 2020 election?</h3>
+    <h3 id="actualtitle">How likely are incoming freshmen to vote in the 2020 election?</h3>
     <!-- <h3 id="subtitle">All freshmen</h3> -->
 </div>
 
@@ -37,7 +37,6 @@
      </label>
     </div>
    </div>
-
 <div id="graph"></div>
 <div id="caption">
     <div id="credit">
@@ -55,7 +54,7 @@
     var UMcolor = "#7f7fff"//"#FFCB05"
 
     //Set size of graph
-    var margin = {top: 20, right: 10, bottom: 70, left: 10},
+    var margin = {top: 80, right: 10, bottom: 70, left: 10},
         width = window.innerWidth - margin.left - margin.right,
         height = 400 - margin.top - margin.bottom;
 
@@ -79,14 +78,14 @@
   var subgroups = data.columns.slice(1)
 
 // List of groups = species here = value of the first column called group -> I show them on the X axis
-var groups = d3.map(data, function(d){return(d.Comfort)}).keys()
+var groups = d3.map(data, function(d){return(d.Politics)}).keys()
     
     function getPC(newValue, oldValue){
         return (newValue - oldValue)/oldValue * 100;
     }
     
     function getMax(){
-        return d3.max(data, function(d) { return +d.All; });
+        return d3.max(data, function(d) { return +d.Number; });
     }
     
     var y = d3.scaleLinear()
@@ -114,7 +113,7 @@ var groups = d3.map(data, function(d){return(d.Comfort)}).keys()
     }
 
     var x = d3.scaleBand()
-        .domain(["Very Unlikely", "Somewhat Unlikely", "Somewhat Likely","Very Likely"])
+        .domain(["Very Liberal", "Somewhat Liberal", "Moderate", "Somewhat Conservative", "Very Conservative"])
         .range([40, width])
         .padding(0.1);
 
@@ -134,111 +133,75 @@ var groups = d3.map(data, function(d){return(d.Comfort)}).keys()
     }
 
     var color = d3.scaleOrdinal()
-        .domain(["Very Unlikely", "Somewhat Unlikely", "Somewhat Likely","Very Likely"])
-        .range(['#15728c','#88a7ca','#d6a4db', '#d65e94'])
+        .domain(["Very Liberal", "Somewhat Liberal", "Moderate", "Somewhat Conservative", "Very Conservative"])
+        .range(["#212ec2","#bc7ac3","#eae3e7","#ec8aa1","#d61a36"])
         
     svg.selectAll("mybar")
     .data(data)
     .enter()
     .append("rect")
-        .attr("x", function(d) { return x(d.Likelihood); })
-        .attr("y", function(d) { return y(d.All) })
+        .attr("x", function(d) { return x(d.Politics); })
+        .attr("y", function(d) { return y(d.Number) })
         .attr("width", x.bandwidth())
-        .attr("height", function(d) { return height - y(d.All)})
+        .attr("height", function(d) { return height - y(d.Number)})
         .attr("fill", function(d){
-            return color(d.Likelihood)
+            return color(d.Politics)
         })
         .attr("class","all")
+
+    console.log(data)
     
     svg.selectAll("mybar")
     .data(data)
     .enter()
     .append("rect")
-        .attr("x", function(d) { return x.bandwidth()/3 + x(d.Likelihood); })
+        .attr("x", function(d) { return x.bandwidth()/2 + x(d.Politics); })
         .attr("y", function(d) { return y(0) })
-        .attr("width", x.bandwidth()/10)
+        .attr("width", x.bandwidth()/2)
         .attr("height", function(d) { return height - y(0)})
         .attr("fill", "#4c7c9b")
-        .attr("class","moderate")
+        .attr("class","somewhat")
     
     svg.selectAll("mybar")
     .data(data)
     .enter()
     .append("rect")
-        .attr("x", function(d) { return x.bandwidth()/3*2 + x(d.Likelihood); })
+        .attr("x", function(d) { return x(d.Politics); })
         .attr("y", function(d) { return y(0) })
-        .attr("width", x.bandwidth()/10)
+        .attr("width", x.bandwidth()/2)
         .attr("height", function(d) { return height - y(0)})
         .attr("fill", "#86b0cc")
-        .attr("class","somewhatconservative")
-    
-    svg.selectAll("mybar")
-    .data(data)
-    .enter()
-    .append("rect")
-        .attr("x", function(d) { return x.bandwidth()/3*2 + x(d.Likelihood); })
-        .attr("y", function(d) { return y(0) })
-        .attr("width", x.bandwidth()/10)
-        .attr("height", function(d) { return height - y(0)})
-        .attr("fill", "#c1e7ff")
-        .attr("class","somewhatliberal")
-    
-    svg.selectAll("mybar")
-    .data(data)
-    .enter()
-    .append("rect")
-        .attr("x", function(d) { return x.bandwidth()/3*2 + x(d.Likelihood); })
-        .attr("y", function(d) { return y(0) })
-        .attr("width", x.bandwidth()/10)
-        .attr("height", function(d) { return height - y(0)})
-        .attr("fill", "#d6a4db")
-        .attr("class","veryconservative")
-
-    svg.selectAll("mybar")
-    .data(data)
-    .enter()
-    .append("rect")
-        .attr("x", function(d) { return x.bandwidth()/3*2 + x(d.Likelihood); })
-        .attr("y", function(d) { return y(0) })
-        .attr("width", x.bandwidth()/10)
-        .attr("height", function(d) { return height - y(0)})
-        .attr("fill", "#d65e94")
-        .attr("class","veryliberal")
-
+        .attr("class","very")
     
     //LEGEND
     svg
         .append('g')
         .append('rect')
         .style("fill", "white")
+        .style("fill-opacity","0.0")
         .style("opacity", 1)
-        .attr("width", 170)
-        .attr("height", 110)
+        .attr("width", 10)
+        .attr("height", 10)
         .attr("x", width/2 - 60)
         .attr("class", "legend")
-    svg.append("circle").attr("cx",width/2 - 40).attr("cy",4).attr("r", 6).style("fill", "#eae3e7").attr("class", "legend")
-    svg.append("circle").attr("cx",width/2 - 40).attr("cy",24).attr("r", 6).style("fill", "#4c7c9b").attr("class", "legend")
-    svg.append("circle").attr("cx",width/2 - 40).attr("cy",44).attr("r", 6).style("fill", "#86b0cc").attr("class", "legend")
-    svg.append("circle").attr("cx",width/2 - 40).attr("cy",64).attr("r", 6).style("fill", "#c1e7ff").attr("class", "legend")
-    svg.append("circle").attr("cx",width/2 - 40).attr("cy",84).attr("r", 6).style("fill", "#d6a4db").attr("class", "legend")
-    svg.append("circle").attr("cx",width/2 - 40).attr("cy",104).attr("r", 6).style("fill", "#d65e94").attr("class", "legend")
+    svg.append("circle").attr("cx",width/2 - 80).attr("cy",-64).attr("r", 6).style("fill", "#4c7c9b").attr("class", "legend")
+    svg.append("circle").attr("cx",width/2 + 35).attr("cy",-64).attr("r", 6).style("fill", "#86b0cc").attr("class", "legend")
 
-    svg.append("text").attr("x", width/2 - 20).attr("y", 4).text("All respondents").style("font-size", "10px").attr("alignment-baseline","middle").attr("class", "legend")
-    svg.append("text").attr("x", width/2 - 20).attr("y", 24).text("Moderate").style("font-size", "10px").attr("alignment-baseline","middle").attr("class", "legend")
-    svg.append("text").attr("x", width/2 - 20).attr("y", 44).text("Somewhat Conservative").style("font-size", "10px").attr("alignment-baseline","middle").attr("class", "legend")
-    svg.append("text").attr("x", width/2 - 20).attr("y", 64).text("Somewhat Liberal").style("font-size", "10px").attr("alignment-baseline","middle").attr("class", "legend")
-    svg.append("text").attr("x", width/2 - 20).attr("y", 84).text("Very Conservative").style("font-size", "10px").attr("alignment-baseline","middle").attr("class", "legend")
-    svg.append("text").attr("x", width/2 - 20).attr("y", 104).text("Very Liberal").style("font-size", "10px").attr("alignment-baseline","middle").attr("class", "legend")
-    svg.append("rect").attr("x", width/2-45).attr("y", width/2+45).attr("height", 50).style("fill", "#666").attr("class", "legend")
+    svg.append("text").attr("x", width/2 - 70).attr("y", -64).text("Somewhat Likely").style("font-size", "10px").attr("alignment-baseline","middle").attr("class", "legend")
+    svg.append("text").attr("x", width/2 + 45).attr("y", -64).text("Very Likely").style("font-size", "10px").attr("alignment-baseline","middle").attr("class", "legend")
+    svg.append("rect").attr("x", width/2-40).attr("y", -124).attr("height", 5).style("fill", "#666").attr("class", "legend")
     
     svg.selectAll(".legend").style("opacity", 0)
 
         
     function update(){
 
+        y.domain([0,90]);
+        yGroup.transition().duration(2500).call(customYAxis);
+
         svg.selectAll(".legend").transition().duration(mode ? 400 : 0).style("opacity", mode ? 1 : 0)
 
-        var u = svg.selectAll(".moderate")
+        var u = svg.selectAll(".somewhat")
         .data(data)
 
         u
@@ -247,10 +210,10 @@ var groups = d3.map(data, function(d){return(d.Comfort)}).keys()
         .merge(u)
         .transition()
         .duration(mode ? 700 : 400)
-        .attr("y", function(d) { return mode ? y(d.Moderate): y(0)})
-        .attr("height", function(d) { return mode ? height - y(d.Moderate) : height - y(0)})
+        .attr("y", function(d) { return mode ? y(d.Somewhat): y(0)})
+        .attr("height", function(d) { return mode ? height - y(d.Somewhat) : height - y(0)})
 
-        u = svg.selectAll(".somewhatconservative")
+        u = svg.selectAll(".very")
         .data(data)
 
         u
@@ -259,44 +222,8 @@ var groups = d3.map(data, function(d){return(d.Comfort)}).keys()
         .merge(u)
         .transition()
         .duration(mode ? 800 : 300)
-        .attr("y", function(d) { return mode ? y(d.SomewhatConservative) : y(0)})
-        .attr("height", function(d) { return mode ? height - y(d.SomewhatConservative) : height - y(0)})
-
-        u = svg.selectAll(".somewhatliberal")
-        .data(data)
-
-        u
-        .enter()
-        .append("rect")
-        .merge(u)
-        .transition()
-        .duration(mode ? 800 : 300)
-        .attr("y", function(d) { return mode ? y(d.SomewhatLiberal) : y(0)})
-        .attr("height", function(d) { return mode ? height - y(d.SomewhatLiberal) : height - y(0)})
-
-        u = svg.selectAll(".veryconservative")
-        .data(data)
-
-        u
-        .enter()
-        .append("rect")
-        .merge(u)
-        .transition()
-        .duration(mode ? 800 : 300)
-        .attr("y", function(d) { return mode ? y(d.VeryConservative) : y(0)})
-        .attr("height", function(d) { return mode ? height - y(d.VeryConservative) : height - y(0)})
-
-        u = svg.selectAll(".veryliberal")
-        .data(data)
-
-        u
-        .enter()
-        .append("rect")
-        .merge(u)
-        .transition()
-        .duration(mode ? 800 : 300)
-        .attr("y", function(d) { return mode ? y(d.VeryLiberal) : y(0)})
-        .attr("height", function(d) { return mode ? height - y(d.VeryLiberal) : height - y(0)})
+        .attr("y", function(d) { return mode ? y(d.Very) : y(0)})
+        .attr("height", function(d) { return mode ? height - y(d.Very) : height - y(0)})
 
         u = svg.selectAll(".all")
         .data(data)
@@ -307,12 +234,13 @@ var groups = d3.map(data, function(d){return(d.Comfort)}).keys()
         .merge(u)
         .transition()
         .duration(mode ? 300 : 800)
-        .attr("x", function(d) { return x(d.Likelihood)})
-        .attr("width", mode ? x.bandwidth()/10 : x.bandwidth())
-        .attr("height", function(d) { return height - y(d.All)})
+        .attr("y", function(d) { return mode ? y(0) : y(d.Number)})
+        .attr("height", function(d) { return mode ? height - y(0) : height - y(d.Number)})
         .attr("fill", function(d){
-            return mode ? "#eae3e7": color(d.Likelihood)
+            return mode ? "#eae3e7": color(d.Politics)
         })
+
+        document.getElementById("actualtitle").innerHTML= mode ? "How likely are incoming freshmen to vote in the 2020 election?" : "What are your political leanings?"
     }
 
 

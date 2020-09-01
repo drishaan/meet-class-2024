@@ -1,5 +1,6 @@
-Likelihood,All,Moderate,SomewhatConservative,SomewhatLiberal,VeryConservative,VeryLiberal
-Very Unlikely,1.07,2.27,2.81,0.17,1.89,0.57
-Somewhat Unlikely,2.37,5.04,5.62,0.86,0.00,1.14
-Somewhat Likely,10.43,22.92,14.61,8.42,7.55,1.90
-Very Likely,77.79,59.19,71.91,82.65,86.79,87.86
+Politics,Somewhat,Very,Number
+Very Liberal,1.897533207,87.85578748,30.33966609
+Somewhat Liberal,8.419243986,82.64604811,33.50604491
+Moderate,22.92191436,59.19395466,22.85549799
+Somewhat Conservative,14.60674157,71.91011236,10.24755325
+Very Conservative,7.547169811,86.79245283,3.051237766
